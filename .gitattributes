@@ -1,1 +1,3 @@
 *.cs diff=csharp
+Content/* linguist-vendored
+Scripts/* linguist-vendored
