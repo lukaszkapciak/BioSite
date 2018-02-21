@@ -1,0 +1,79 @@
+﻿@model IEnumerable<LogicBioSite.Models.ReadFile.AmplificationData>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<link href="@Url.Content("~/Content/HoldOn.min.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Content/HoldOn.min.js")"></script>
+
+@{
+    ViewBag.Title = "ShowAmplificationData";
+    var errorMsg = ViewData["dataReadErrorMsg"] as string;
+}
+
+@if (!string.IsNullOrEmpty(errorMsg))
+{
+    <span class="form-control">@errorMsg</span>
+}
+
+<h4>Oblicz Ct, threshold, średnią oraz odchylenie dla ΔRn</h4>
+<button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
+
+<h1>@Model.Count()</h1>
+<h2>Amplification Data:</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Well)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cycle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TargetName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ΔRn)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Well)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cycle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TargetName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ΔRn)
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+
+<script>
+    function CalculateCt() {
+        var options = {
+            theme:"sk-circle",
+            message: 'Trwa wyznaczanie linii progowej oraz obliczanie Ct.</br>' +
+                'W przypadku dużej ilości danych czas oczekiwania może się wydłużyć.</br>' +
+                'Po zakończeniu obliczeń nastąpi automatyczne przekierowanie na strone wynikową.',
+            textColor:"white"
+        };
+
+        HoldOn.open(options);
+        window.location.href = '@Url.Action("CalculateCtWithoutSaveData", "Calculate")';
+    }
+</script>
