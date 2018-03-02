@@ -6,7 +6,55 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <link href="@Url.Content("~/Content/HoldOn.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Content/HoldOn.min.js")"></script>
+    <link href="@Url.Content("~/Content/toastr.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Content/toastr.js")"></script>
 
+    <script>
+        /**
+        * Wyświetl informację w formie js notification
+        *
+        * @@method ShowNotification
+        * @@param {String} type
+        * @@param {String} message
+        */
+        function ShowNotification(type, message) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+            }
+
+            switch (type) {
+                case "success":
+                    window.toastr.success(message);
+                    break;
+                case "warning":
+                    window.toastr.warning(message);
+                    break;
+                case "error":
+                    window.toastr.error(message);
+                    break;
+                default:
+                    window.toastr.info(message);
+                    break;
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -17,7 +65,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("BioSite", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">

@@ -43,7 +43,7 @@ namespace BioSite.Controllers
         {
             try
             {
-                var data = _ICalculateCtLogic.CalculateCt(Session["csvData"] as IEnumerable<AmplificationData>);
+                var data = _ICalculateCtLogic.CalculateCt(Session["userCurrentData"] as IEnumerable<AmplificationData>);
 
                 return View("CalculateCt", data);
             }
