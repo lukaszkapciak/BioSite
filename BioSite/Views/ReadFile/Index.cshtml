@@ -3,7 +3,7 @@
     ViewBag.Title = "Wczytywanie pliku";
 }
 
-<h2>Wybierz plik</h2>
+<h3>Wybierz plik</h3>
 
 @using (Html.BeginForm("ReadAmplificationData", "ReadFile", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -13,7 +13,13 @@
     <div class="form-group">
         <input type="file" id="dataFile" name="postedFile" />
     </div>
-
+    <div class="form-group">
+        <input id="responsable" name="type" value="true" type="checkbox" />
+        @Html.Label(" Zaznacz jesli posiadasz gotowy plik wynikowy ze sekwencjonatora")
+        <p style="font-size: 10px;" class="text-danger">*Jeśli posiadasz zwykły plik z danymi np. CSV pozostaw checkbox pusty.
+        Funkcja jest dostosowana do pliku z naglowkiem czyli dane do obliczen musza sie zaczac w 2gim wierszu.
+        Z czasem zostanie to poprawione.</p>
+    </div>
     <div class="form-group">
         <input type="submit" value="Wczytaj" class="btn btn-default" />
     </div>
