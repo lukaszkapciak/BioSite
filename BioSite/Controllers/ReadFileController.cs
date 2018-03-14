@@ -59,9 +59,9 @@ namespace BioSite.Controllers
                 Session["userCurrentData"] = data;
                 return View(data);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ViewData["dataReadMsg"] = new[] { "error", $"Wystąpił błąd ({e}) podczas wczytywania danych" };
+                ViewData["dataReadMsg"] = new[] { "warning", $"Wystąpił błąd podczas wczytywania danych" };
                 return View();
             }
         }

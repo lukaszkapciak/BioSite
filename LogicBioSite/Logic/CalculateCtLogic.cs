@@ -133,7 +133,7 @@ namespace LogicBioSite.Logic
             var index = 0;
             foreach (var item in values.Item2)
             {
-                IList<Tuple<Double, Double>> points = PointsPrediction(new Tuple<Double, Double>(Math.Round(item[0], 2), Math.Round(item[1], 2)), new Tuple<Double, Double>(Math.Round(item[2], 2), Math.Round(item[3], 2)), 1000000);
+                IList<Tuple<Double, Double>> points = PointsPrediction(new Tuple<Double, Double>(Math.Round(item[0], 2), Math.Round(item[1], 2)), new Tuple<Double, Double>(Math.Round(item[2], 2), Math.Round(item[3], 2)), 10);
                 foreach (var point in points)
                 {
                     if (point.Item1.ToString().Contains(item[4].ToString("F2")))
@@ -142,7 +142,7 @@ namespace LogicBioSite.Logic
                     }
                 }
 
-                result.Add(new CalculateCt() { Well = values.Item1[index], Ct = cts.First(), ThresholdValue = item[4] });
+                result.Add(new CalculateCt() { Well = values.Item1[index], Ct = cts.Count > 0 ? cts.Average() : 0, ThresholdValue = item[4] });
                 cts = new List<double>();
                 index++;
             }
@@ -158,7 +158,7 @@ namespace LogicBioSite.Logic
             var index = 0;
             foreach (var item in values.Item2)
             {
-                IList<Tuple<Double, Double>> points = PointsPrediction(new Tuple<Double, Double>(Math.Round(item[0], 2), Math.Round(item[1], 2)), new Tuple<Double, Double>(Math.Round(item[2], 2), Math.Round(item[3], 2)), 1000000);
+                IList<Tuple<Double, Double>> points = PointsPrediction(new Tuple<Double, Double>(Math.Round(item[0], 2), Math.Round(item[1], 2)), new Tuple<Double, Double>(Math.Round(item[2], 2), Math.Round(item[3], 2)), 500000); //1mln
                 foreach (var point in points)
                 {
                     if (point.Item1.ToString().Contains(item[4].ToString("F2")))
@@ -167,7 +167,7 @@ namespace LogicBioSite.Logic
                     }
                 }
 
-                result.Add(new CalculateCt() { Well = values.Item1[index], Ct = cts.First(), ThresholdValue = item[4] });
+                result.Add(new CalculateCt() { Well = values.Item1[index], Ct = cts.Count > 0 ? cts.Average() : 0, ThresholdValue = item[4] });
                 cts = new List<double>();
                 index++;
             }
