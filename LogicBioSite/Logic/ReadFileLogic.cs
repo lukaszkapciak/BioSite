@@ -1,6 +1,7 @@
 ﻿using ExcelDataReader;
 using LogicBioSite.Models.DbContext;
 using LogicBioSite.Models.ReadFile;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -25,14 +26,14 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        IEnumerable<AmplificationData> AmplificationData(string file);
+        IList<AmplificationData> AmplificationData(string file);
 
         /// <summary>
         /// Wczytanie danych otrzymanych ze sekwencjonatora
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        IEnumerable<AmplificationData> AmplificationDataSekwencjonator(string file);
+        IList<AmplificationData> AmplificationDataSekwencjonator(string file);
 
         /// <summary>
         /// Zapis wczytanych danych do bazy danych
@@ -80,10 +81,11 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        public IEnumerable<AmplificationData> AmplificationData(string file)
+        public IList<AmplificationData> AmplificationData(string file)
         {
             var source = File.ReadLines(file).Select(line => line.Split(';'));
-            IEnumerable<AmplificationData> data = source.Skip(1).Select(p => new AmplificationData { Well = p[0], Cycle = p[1], TargetName = p[2], Rn = p[3], ΔRn = p[4] });
+            IList<AmplificationData> data = source.Skip(1).Select(p => new AmplificationData { Well = p[0], Cycle = p[1], TargetName = p[2], Rn = p[3], ΔRn = p[4] }).ToList();
+            
             return data;
         }
 
@@ -92,12 +94,12 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        public IEnumerable<AmplificationData> AmplificationDataSekwencjonator(string file)
+        public IList<AmplificationData> AmplificationDataSekwencjonator(string file)
         {
             FileStream stream = File.Open(file, FileMode.Open, FileAccess.Read);
             IExcelDataReader excelReader = ExcelReaderFactory.CreateReader(stream);
             var result = excelReader.AsDataSet();
-            var data = result.Tables[3].Rows.Cast<DataRow>().Skip(8).Select(p => new AmplificationData { Well = p.ItemArray[0].ToString(), Cycle = p.ItemArray[1].ToString(), TargetName = p.ItemArray[2].ToString(), Rn = p.ItemArray[3].ToString(), ΔRn = p.ItemArray[4].ToString() });
+            var data = result.Tables[3].Rows.Cast<DataRow>().Skip(8).Select(p => new AmplificationData { Well = p.ItemArray[0].ToString(), Cycle = p.ItemArray[1].ToString(), TargetName = p.ItemArray[2].ToString(), Rn = p.ItemArray[3].ToString(), ΔRn = p.ItemArray[4].ToString() }).ToList();
             return data;
         }
 
