@@ -5,6 +5,8 @@
     var dataReadMsg = ViewData["dataReadMsg"] as string[];
 }
 
+@if (Model != null && Model.Count() > 0)
+{
 <h4>Oblicz Ct, threshold, średnią oraz odchylenie dla ΔRn</h4>
 <button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
 
@@ -51,7 +53,11 @@
     }
 
 </table>
-
+}
+else
+{
+    <p class="text-warning"><span class="glyphicon glyphicon-plus"></span> Brak danych</p>
+}
 
 
 <script>
