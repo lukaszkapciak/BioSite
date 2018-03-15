@@ -2,6 +2,10 @@
 
 @{
     ViewBag.Title = "Ct i Threshold dla pierwszych 40 wyników";
+    var ids = 0;
+    string a = $"#asd{ids}";
+    string a2 = $"asd{ids}";
+    string a3 = $"chart{ids}";
 }
 
 <h2>Obliczenia</h2>
@@ -11,7 +15,7 @@
 <table class="table">
     <tr>
         <th>
-           @Html.DisplayName("Well")
+            @Html.DisplayName("Well")
         </th>
         <th>
             @Html.DisplayName("ThresholdValue")
@@ -19,21 +23,70 @@
         <th>
             @Html.DisplayName("Ct")
         </th>
+        <th>
+            @Html.DisplayName("ΔCt")
+        </th>
+        <th>
+            @Html.DisplayName("meanCt")
+        </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model.Cts) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Well)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ThresholdValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ct)
-        </td>
-    </tr>
+</table>
+@foreach (var item in Model.Cts)
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-target='@a' style="margin-left: 5px;">
+                        @Html.DisplayFor(modelItem => item.Well) @Html.DisplayFor(modelItem => item.ThresholdValue) @Html.DisplayFor(modelItem => item.Ct) @Html.DisplayFor(modelItem => item.ΔCt) @Html.DisplayFor(modelItem => item.meanCt)  
+                    </a>
+                </h4>
+            </div>
+            <div id='@a2' class="panel-collapse collapse in">
+                <div class="panel-body">
+                    @*<canvas id='@a3'></canvas>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    ids++;
 }
 
-</table>
+<style>
+    .panel-heading a:after {
+        font-family: 'Glyphicons Halflings';
+        content: "\e114";
+        float: left;
+        color: grey;
+    }
+
+    .panel-heading a.collapsed:after {
+        content: "\e080";
+    }
+</style>
+
+@*<script>
+    var asd = '@Model.Cts.Count()';
+    for (var i = 0; i < asd; i++) {
+        var ctx = document.getElementById('@a3').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [{
+                    label: "My First dataset",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [0, 10, 5, 2, 20, 30, 45],
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    }
+</script>*@

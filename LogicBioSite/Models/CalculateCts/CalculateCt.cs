@@ -12,5 +12,7 @@ namespace LogicBioSite.Models.CalculateCts
         public string Well { get; set; }
         public double ThresholdValue { get; set; }
         public double Ct { get; set; }
+        public double ΔCt { get; set; }
+        public double meanCt { get; set; }
     }
 }
