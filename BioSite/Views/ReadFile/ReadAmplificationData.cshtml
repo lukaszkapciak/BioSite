@@ -5,9 +5,28 @@
     var dataReadMsg = ViewData["dataReadMsg"] as string[];
 }
 
-@if (Model != null && Model.Count() > 0)
+@if (Model != null && Model.Any())
 {
-<h4>Oblicz Ct, threshold, średnią oraz odchylenie dla ΔRn</h4>
+    <h4>Calculate Ct, threshold, mean and std dev for ΔRn</h4>
+
+    using (Html.BeginForm("CalculateCtWithoutSaveData", "Calculate", null, FormMethod.Post, new { id = "CalculateCtForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+        @Html.Label("Number of digits in Ct", new { @class = "control-label"  })
+        @Html.TextBox("digits", 2, new { @class="form-control", type = "number", min = 0, max = 3 } )
+        @Html.Label("Minimum value for Rmax", new { @class = "control-label" })
+        @Html.TextBox("rMax", 40000, new { @class = "form-control", type = "number", min = 0 })
+        @Html.Label("Numbers of predicted points between 2 points", new { @class = "control-label" })
+        @Html.TextBox("predicted", 500000, new { @class = "form-control", type = "number", min = 0 })
+        @*<div class="form-group">
+            <input type="text" name="postedFile" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <input type="text" name="postedFileNames" class="form-control" />
+        </div>*@
+    }
+
 <button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
 
 <h2>Amplification Data:</h2>
@@ -16,6 +35,9 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Well)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.miRname)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Cycle)
@@ -36,6 +58,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Well)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.miRname)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Cycle)
@@ -73,6 +98,7 @@ else
         };
 
         HoldOn.open(options);
-        window.location.href = '@Url.Action("CalculateCtWithoutSaveData", "Calculate")';
+        $("#CalculateCtForm").submit();
+        @*window.location.href = '@Url.Action("CalculateCtWithoutSaveData", "Calculate")';*@
     }
 </script>

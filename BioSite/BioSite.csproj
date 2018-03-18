@@ -246,9 +246,18 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\billboard.css" />
+    <Content Include="Content\billboard.js" />
+    <Content Include="Content\billboard.min.css" />
+    <Content Include="Content\billboard.min.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\HoldOn.css" />
+    <Content Include="Content\HoldOn.js" />
+    <Content Include="Content\HoldOn.min.css" />
+    <Content Include="Content\HoldOn.min.js" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.js" />
     <Content Include="Scripts\HoldOn.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

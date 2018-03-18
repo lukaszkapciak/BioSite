@@ -1,7 +1,6 @@
 ﻿using ExcelDataReader;
 using LogicBioSite.Models.DbContext;
 using LogicBioSite.Models.ReadFile;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -33,7 +32,7 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        IList<AmplificationData> AmplificationDataSekwencjonator(string file);
+        IList<AmplificationData> AmplificationDataStepOne(string file);
 
         /// <summary>
         /// Zapis wczytanych danych do bazy danych
@@ -47,6 +46,14 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <returns>Zwraca dane z bazy danych zgodne z modelem AmplificationData</returns>
         IEnumerable<AmplificationData> GetAmplificationData();
+
+        /// <summary>
+        /// Dodaje nazwy dla poszczególnych dołków z pliku zewnetrznego
+        /// </summary>
+        /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
+        /// <param name="data">plik z aktualnie wczytanymi danymi</param>
+        /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
+        IList<AmplificationData> ChangeNames(string file, IEnumerable<AmplificationData> data);
     }
     public class ReadFileLogic : IReadFileLogic
     {
@@ -94,7 +101,7 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        public IList<AmplificationData> AmplificationDataSekwencjonator(string file)
+        public IList<AmplificationData> AmplificationDataStepOne(string file)
         {
             FileStream stream = File.Open(file, FileMode.Open, FileAccess.Read);
             IExcelDataReader excelReader = ExcelReaderFactory.CreateReader(stream);
@@ -129,6 +136,30 @@ namespace LogicBioSite.Logic
         public IEnumerable<AmplificationData> GetAmplificationData()
         {
             return _db.AmplificationData.AsEnumerable();
+        }
+
+        /// <summary>
+        /// Dodaje nazwy dla poszczególnych dołków z pliku zewnetrznego
+        /// </summary>
+        /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
+        /// <param name="data">plik z aktualnie wczytanymi danymi</param>
+        /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
+        public IList<AmplificationData> ChangeNames(string file, IEnumerable<AmplificationData> data)
+        {
+            FileStream stream = File.Open(file, FileMode.Open, FileAccess.Read);
+            IExcelDataReader excelReader = ExcelReaderFactory.CreateReader(stream);
+            var result = excelReader.AsDataSet();
+            var miRname = result.Tables[0].Rows.Cast<DataRow>().Take(100).Skip(4).Select(p => new MiRname
+            { Well = p.ItemArray[3].ToString()[1] != '0' ? p.ItemArray[3].ToString() : $"{p.ItemArray[3].ToString()[0]}{p.ItemArray[3].ToString()[2]}"
+                , Name = p.ItemArray[0].ToString() });
+            var dataAsList = data.ToList();
+            foreach (var name in dataAsList)
+            {
+                name.miRname = miRname.First(p => p.Well.Equals(name.Well)).Name;
+            }
+
+            HttpContext.Current.Session["uniqueMiRname"] = miRname;
+            return dataAsList;
         }
     }
 }

@@ -3,7 +3,9 @@ using LogicBioSite.Models.DbContext;
 using LogicBioSite.Models.ReadFile;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
+using WebGrease.Css.Extensions;
 
 namespace BioSite.Controllers
 {
@@ -39,12 +41,11 @@ namespace BioSite.Controllers
             }
         }
 
-        public ActionResult CalculateCtWithoutSaveData()
+        public ActionResult CalculateCtWithoutSaveData(double rMax, double digits, ulong predicted)
         {
             try
             {
-                var data = _ICalculateCtLogic.CalculateCt(Session["userCurrentData"] as IEnumerable<AmplificationData>);
-
+                var data = _ICalculateCtLogic.CalculateCt(rMax, digits, predicted, Session["userCurrentData"] as IEnumerable<AmplificationData>);
                 return View("CalculateCt", data);
             }
             catch (Exception e)
