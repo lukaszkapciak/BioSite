@@ -1,92 +1,167 @@
-﻿@model LogicBioSite.Models.CalculateCts.CtViewModel
+﻿@using System.Globalization
+@using Ninject.Infrastructure.Language
+@model LogicBioSite.Models.CalculateCts.CtViewModel
 
 @{
     ViewBag.Title = "Ct i Threshold dla pierwszych 40 wyników";
-    var ids = 0;
-    string a = $"#asd{ids}";
-    string a2 = $"asd{ids}";
-    string a3 = $"chart{ids}";
 }
 
 <h2>Obliczenia</h2>
 
 <p><b>Średnia Ct:</b> @Model.Mean, <b>Odchylenie standardowe:</b> @Model.StandardDeviation</p>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("Well")
-        </th>
-        <th>
-            @Html.DisplayName("ThresholdValue")
-        </th>
-        <th>
-            @Html.DisplayName("Ct")
-        </th>
-        <th>
-            @Html.DisplayName("ΔCt")
-        </th>
-        <th>
-            @Html.DisplayName("meanCt")
-        </th>
-        <th></th>
-    </tr>
-</table>
+<div class="row" style="text-decoration: none; cursor: pointer;">
+    <div class="col-sm-2">@Html.Label("Well")</div>
+    <div class="col-sm-2">@Html.Label("miRname")</div>
+    <div class="col-sm-2">@Html.Label("ThresholdValue")</div>
+    <div class="col-sm-2">@Html.Label("Ct")</div>
+    <div class="col-sm-2">@Html.Label("ΔCt")</div>
+    <div class="col-sm-2">@Html.Label("meanCt")</div> 
+</div>
+
 @foreach (var item in Model.Cts)
 {
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-target='@a' style="margin-left: 5px;">
-                        @Html.DisplayFor(modelItem => item.Well) @Html.DisplayFor(modelItem => item.ThresholdValue) @Html.DisplayFor(modelItem => item.Ct) @Html.DisplayFor(modelItem => item.ΔCt) @Html.DisplayFor(modelItem => item.meanCt)  
-                    </a>
-                </h4>
+    Guid guid = Guid.NewGuid();
+    string hrefId = "#" + guid.ToString();
+    string divId = guid.ToString();
+    string graphDivId = $"graph{guid.ToString()}";
+    string graphScriptId = $"#graph{guid.ToString()}";
+    string chevronId = $"chevron{guid.ToString()}";
+    <hr style="margin: 0px;" />
+    <div>
+        <a onClick="op('@hrefId');changeChevron('@chevronId');">
+            <div class="row" style="text-decoration: none; cursor: pointer;">
+                <div class="col-sm-2"><span id="@chevronId" class="glyphicon glyphicon-chevron-right"></span> @Html.DisplayFor(modelItem => item.Well)</div>
+                @if (!string.IsNullOrEmpty(item.miRname))
+                {
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.miRname)</div>
+                }
+                else
+                {
+                    <div class="col-sm-2"> - </div>
+                }
+                @if (!item.ThresholdValue.Equals(0))
+                {
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.ThresholdValue)</div>
+                }
+                else
+                {
+                    <div class="col-sm-2"> - </div>
+                }
+                @if (!item.Ct.Equals(0))
+                {
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.Ct)</div>
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.ΔCt)</div>
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.meanCt)</div>
+                }
+                else
+                {
+                    <div class="col-sm-2"> - </div>
+                    <div class="col-sm-2"> - </div>
+                    <div class="col-sm-2"> - </div>
+                }
             </div>
-            <div id='@a2' class="panel-collapse collapse in">
-                <div class="panel-body">
-                    @*<canvas id='@a3'></canvas>*@
-                </div>
-            </div>
-        </div>
+        </a>
     </div>
-    ids++;
-}
+    <div id="@divId" class="row" style="display: none; padding: 5px; margin-bottom: 5px;">
+        <div class="col-sm-6">
+            <div id="@graphDivId"></div>
+        </div>
+        <div class="col-sm-6">
+            @using (Html.BeginForm("CalculateCtWithoutSaveData", "Calculate", null, FormMethod.Post, new { id = "CalculateCtForm" }))
+            {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+                <div class="col-sm-6">
+                    @Html.Label("Lower point AxisX", new { @class = "control-label"  })
+                    @Html.TextBox("digits1", null, new { @class="form-control", type = "number", min = 0 } )
+                </div>
+                <div class="col-sm-6">
+                    @Html.Label("Biger point AxisX", new { @class = "control-label"  })
+                    @Html.TextBox("digits2", null, new { @class="form-control", type = "number", min = 0 } )
+                </div>
+                <div class="col-sm-6">
+                    @Html.Label("Lower point AxisY", new { @class = "control-label" })
+                    @Html.TextBox("digits3", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+                <div class="col-sm-6">
+                    @Html.Label("Biger point AxisY", new { @class = "control-label" })
+                    @Html.TextBox("digits4", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+                <div class="col-sm-6 col-lg-offset-6">
+                    @Html.Label("Treshold", new { @class = "control-label" })
+                    @Html.TextBox("digits5", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
 
-<style>
-    .panel-heading a:after {
-        font-family: 'Glyphicons Halflings';
-        content: "\e114";
-        float: left;
-        color: grey;
-    }
+                <div class="col-sm-6">
+                    @Html.Label("Rmax", new { @class = "control-label" })
+                    @Html.TextBox("digits6", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+                <div class="col-sm-6">
+                    @Html.Label("Sample size", new { @class = "control-label" })
+                    @Html.TextBox("digits7", 10, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+                <br/>
+                <div class="col-sm-4">
+                    @Html.Label("Ct", new { @class = "control-label" })
+                    @Html.TextBox("digits8", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+                <div class="col-sm-4">
+                    @Html.Label("mean Ct", new { @class = "control-label" })
+                    @Html.TextBox("digits9", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+                <div class="col-sm-4">
+                    @Html.Label("CtΔ", new { @class = "control-label" })
+                    @Html.TextBox("digits10", null, new { @class = "form-control", type = "number", min = 0 })
+                </div>
+            }
 
-    .panel-heading a.collapsed:after {
-        content: "\e080";
-    }
-</style>
+            <button class="btn btn-default btn-sm" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Recalculate</button>
+        </div>
+        <br/>
+        <a onclick="op('@hrefId');changeChevron('@chevronId');" class="btn btn-default" role="button" style="cursor: pointer; width: 100%;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+    </div>
+    <script>
+        // Script
+        var qpcrAxisX = ["qpcrAxisX"];
+        for (var i = 0; i < 40; i++) {
+            qpcrAxisX.push(i + 1);
+        }
+        var qpcr = ["qpcr"];
+        @foreach (var s in item.readValues)
+        {
+            @:qpcr.push(parseFloat('@s.ToString().Replace(",", ".")'));
+        }
 
-@*<script>
-    var asd = '@Model.Cts.Count()';
-    for (var i = 0; i < asd; i++) {
-        var ctx = document.getElementById('@a3').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                    label: "My First dataset",
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45],
-                }]
+        var chart = bb.generate({
+            size: {
+                width: 450
             },
-
-            // Configuration options go here
-            options: {}
+            data: {
+                xs: {
+                    qpcr: "qpcrAxisX",
+                    tresholdValue: "tresholdAxisX",
+                    Ct: "CtAxisX"
+                },
+                columns: [
+                    qpcrAxisX,
+                    ["tresholdAxisX", 1, 40],
+                    ["CtAxisX", parseFloat('@item.Ct.ToString().Replace(",", ".")')],
+                    qpcr,
+                    ["tresholdValue", parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")'), parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")')],
+                    ["Ct", parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")')]
+                ]
+            },
+            point: {
+                r: 4,
+                pattern: [
+                    "<polygon points='2.5 0 0 5 5 5'></polygon>",
+                    "<polygon points='2.5 0 0 5 5 5'></polygon>",
+                    "circle"
+                ]
+            },
+            bindto: '@graphScriptId',
+            type: "spline"
         });
-    }
-</script>*@
+    </script>
+}

@@ -141,6 +141,7 @@
     <Compile Include="Models\Identity\IdentityModels.cs" />
     <Compile Include="Models\Identity\ManageViewModels.cs" />
     <Compile Include="Models\ReadFile\AmplificationData.cs" />
+    <Compile Include="Models\ReadFile\MiRname.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

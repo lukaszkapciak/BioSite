@@ -17,6 +17,24 @@
     
 
     <script>
+        jQuery(document).ready(function ($) {
+            /* slideToggleDiv */
+            op = function (obj) {
+                $(obj).stop().slideToggle();
+            };
+
+            changeChevron = function (arg) {
+                var span = $("#" + arg);
+                if (span.hasClass("glyphicon glyphicon-chevron-right")) {
+                    span.removeClass("glyphicon glyphicon-chevron-right");
+                    span.addClass("glyphicon glyphicon-chevron-down");
+                } else {
+                    span.removeClass("glyphicon glyphicon-chevron-down");
+                    span.addClass("glyphicon glyphicon-chevron-right");
+                }
+            };
+        });
+
         /**
         * Wyświetl informację w formie js notification
         *
@@ -44,18 +62,18 @@
             }
 
             switch (type) {
-                case "success":
-                    window.toastr.success(message);
-                    break;
-                case "warning":
-                    window.toastr.warning(message);
-                    break;
-                case "error":
-                    window.toastr.error(message);
-                    break;
-                default:
-                    window.toastr.info(message);
-                    break;
+            case "success":
+                window.toastr.success(message);
+                break;
+            case "warning":
+                window.toastr.warning(message);
+                break;
+            case "error":
+                window.toastr.error(message);
+                break;
+            default:
+                window.toastr.info(message);
+                break;
             }
         }
     </script>
