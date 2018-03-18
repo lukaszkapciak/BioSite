@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
-using System.IO;
 using LogicBioSite.Logic;
 using LogicBioSite.Models.DbContext;
 using System.Collections.Generic;
-using System.Linq;
 using LogicBioSite.Models.ReadFile;
-using Microsoft.Ajax.Utilities;
-using WebGrease.Css.Extensions;
 
 namespace BioSite.Controllers
 {

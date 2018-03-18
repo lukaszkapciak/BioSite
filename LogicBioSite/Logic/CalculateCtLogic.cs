@@ -15,6 +15,9 @@ namespace LogicBioSite.Logic
         IList<Tuple<Double, Double>> PointsPrediction(Tuple<Double, Double> a, Tuple<Double, Double> b, ulong count);
         CtViewModel CalculateCt();
         CtViewModel CalculateCt(double rMax, double digits, ulong predicted, IEnumerable<AmplificationData> data);
+        double ReCalculateCt(double lessX, double greaterX, double lessY, double greaterY, double treshold, ulong predicted);
+        CtViewModel CalculateΔCtsMeanCts(CtViewModel data, double mean);
+        CtViewModel SetMiRnames(CtViewModel data);
     }
 
     public class CalculateCtLogic : ICalculateCtLogic
@@ -232,24 +235,61 @@ namespace LogicBioSite.Logic
                 
             }
 
-            var meanCt = result.Select(p => p.Ct).Average();
-            var calculatedData = new CtViewModel() { Cts = result, Mean = meanCt, StandardDeviation = Math.Sqrt(result.Select(p => p.Ct).Average(v => Math.Pow(v - result.Select(p => p.Ct).Average(), 2))) };
-            
-            foreach (var item in calculatedData.Cts)
+            var meanCt = result.Where(p => p.Ct > 0).Select(p => p.Ct).Average();
+            var calculatedData = new CtViewModel() { Cts = result, Mean = meanCt, StandardDeviation = Math.Sqrt(result.Where(p => p.Ct > 0).Select(p => p.Ct).Average(v => Math.Pow(v - result.Where(p => p.Ct > 0).Select(p => p.Ct).Average(), 2))) };
+            calculatedData = CalculateΔCtsMeanCts(calculatedData, meanCt);
+            calculatedData = SetMiRnames(calculatedData);
+
+            return calculatedData;
+        }
+
+        public double ReCalculateCt(double lessX, double greaterX, double lessY, double greaterY, double treshold, ulong predicted)
+        {
+            var cts = new List<double>();
+            var lowCts = new List<double>();
+            IList<Tuple<Double, Double>> points = PointsPrediction(new Tuple<Double, Double>(lessY, lessX), new Tuple<Double, Double>(greaterY, greaterX), predicted); //1mln
+            foreach (var point in points)
             {
-                item.ΔCt = item.Ct - meanCt;
+                if (point.Item1.ToString("F2").Equals(treshold.ToString("F2")))
+                {
+                    cts.Add(point.Item2);
+                }
+            }
+            if (cts.Count.Equals(0) && points.Any(p => p.Item1.ToString("F1").Equals(treshold.ToString("F1"))))
+            {
+                lowCts.Add(points.First(p => p.Item1.ToString("F1").Equals(treshold.ToString("F1"))).Item2);
+            }
+            else
+            {
+                lowCts.Add(0);
+            }
+
+            return cts.Count > 0 ? cts.Average() : lowCts.First();
+        }
+
+        public CtViewModel CalculateΔCtsMeanCts(CtViewModel data, double mean)
+        {
+            foreach (var item in data.Cts.Where(p => p.Ct > 0))
+            {
+                item.ΔCt = item.Ct - mean;
                 item.meanCt = Math.Pow(2, -item.ΔCt);
             }
 
+            return data;
+        }
+
+        public CtViewModel SetMiRnames(CtViewModel data)
+        {
             if (HttpContext.Current.Session["uniqueMiRname"] != null)
             {
                 var names = HttpContext.Current.Session["uniqueMiRname"] as IEnumerable<MiRname>;
-                foreach (var name in calculatedData.Cts)
+                foreach (var name in data.Cts)
                 {
                     name.miRname = names.First(p => p.Well.Equals(name.Well)).Name;
                 }
             }
-            return calculatedData;
+
+            return data;
         }
     }
 }
