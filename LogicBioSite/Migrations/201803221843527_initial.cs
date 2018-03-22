@@ -13,6 +13,7 @@ namespace LogicBioSite.Migrations
                     {
                         id = c.Int(nullable: false, identity: true),
                         Well = c.String(),
+                        miRname = c.String(),
                         Cycle = c.String(),
                         TargetName = c.String(),
                         Rn = c.String(),
