@@ -148,6 +148,7 @@
 
 /*-- Arc --*/
 .bb-chart-arcs-title {
+    /* ReSharper disable once InvalidValue */
   dominant-baseline: middle;
   font-size: 1.3em; }
 
