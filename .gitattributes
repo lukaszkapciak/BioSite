@@ -1,2 +1,2 @@
-* linguist-vendored
-*.js linguist-vendored=false
+BioSite/Scripts/* linguist-vendored
+BioSite/Content/* linguist-vendored
