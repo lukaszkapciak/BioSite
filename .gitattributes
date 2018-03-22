@@ -1,2 +1,1 @@
-BioSite/Scripts/* linguist-vendored
-BioSite/Content/* linguist-vendored
+*.cs text=auto diff=csharp
