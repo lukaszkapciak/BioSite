@@ -7,20 +7,6 @@
 
 @if (Model != null && Model.Any())
 {
-    <h4>Calculate Ct, threshold, mean and std dev for ΔRn</h4>
-
-    using (Html.BeginForm("CalculateCtWithoutSaveData", "Calculate", null, FormMethod.Post, new { id = "CalculateCtForm" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
-        @Html.Label("Minimum value for Rmax", new { @class = "control-label" })
-        @Html.TextBox("rMax", 10000, new { @class = "form-control", type = "number", min = 0 })
-        @Html.Label("Numbers of predicted points between 2 points", new { @class = "control-label" })
-        @Html.TextBox("predicted", 50000, new { @class = "form-control", type = "number", min = 0 })
-    }
-
-<button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
-
 <h2>Amplification Data:</h2>
 
 <table class="table">
@@ -76,19 +62,6 @@
         <text>
             ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
         </text>
-    }
-
-    function CalculateCt() {
-        var options = {
-            theme: "sk-circle",
-            message: 'Trwa wyznaczanie linii progowej oraz obliczanie Ct.</br>' +
-                'W przypadku dużej ilości danych czas oczekiwania może się wydłużyć.</br>' +
-                'Po zakończeniu obliczeń nastąpi automatyczne przekierowanie na strone wynikową.',
-            textColor: "white"
-        };
-
-        HoldOn.open(options);
-        $("#CalculateCtForm").submit();
     }
 </script>
 }

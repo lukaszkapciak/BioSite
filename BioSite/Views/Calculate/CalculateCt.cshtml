@@ -1,8 +1,9 @@
 ﻿@model LogicBioSite.Models.CalculateCts.CtViewModel
 
 @{
-    ViewBag.Title = "Cts";
+    ViewBag.Title = "Calculated Data";
 }
+
 
 <p><b>Mean Ct:</b> @Model.Mean, <b>Standard Deviation:</b> @Model.StandardDeviation</p> 
 Click @Html.ActionLink("here", "ReCalculateCtsDeltaCtsmeanCts", "Calculate", new { @class = "btn btn-default btn-sm" }) to recalculate ΔCt and meanCt for whole data and added Ct <br/>

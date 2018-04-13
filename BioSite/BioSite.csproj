@@ -326,6 +326,7 @@
     <Content Include="Views\Calculate\CalculateCt.cshtml" />
     <Content Include="Views\ReadFile\ReadCsvData.cshtml" />
     <Content Include="Views\ReadFile\ReadStepOneData.cshtml" />
+    <Content Include="Views\Calculate\CalculateCtForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

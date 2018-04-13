@@ -73,7 +73,7 @@ namespace BioSite.Controllers
             catch (Exception)
             {
                 ViewData["dataReadMsg"] = new[] { "warning", $"An error occurred while loading data" };
-                return View();
+                return View("ReadAmplificationData");
             }
         }
 
@@ -105,7 +105,7 @@ namespace BioSite.Controllers
             catch (Exception)
             {
                 ViewData["dataReadMsg"] = new[] { "warning", $"An error occurred while loading data" };
-                return View();
+                return View("ReadAmplificationData");
             }
         }
         #endregion

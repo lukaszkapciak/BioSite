@@ -21,13 +21,32 @@ namespace BioSite.Controllers
         }
         #endregion
 
-        public ActionResult CalculateCt()
+        //public ActionResult CalculateCt()
+        //{
+        //    try
+        //    {
+        //        var data = _ICalculateCtLogic.CalculateCt();
+
+        //        return View(data);
+        //    }
+        //    catch (Exception e)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+        public ActionResult CalculateCtForm()
+        {
+            return View();
+        }
+
+        public ActionResult CalculateCt(double rMax, ulong predicted)
         {
             try
             {
-                var data = _ICalculateCtLogic.CalculateCt();
-
-                return View(data);
+                var data = _ICalculateCtLogic.CalculateCt(rMax, predicted, Session["userCurrentData"] as IEnumerable<AmplificationData>);
+                Session["CalculatedCtsΔCtsmeanCts"] = data;
+                return View("CalculateCt", data);
             }
             catch (Exception e)
             {
@@ -36,12 +55,11 @@ namespace BioSite.Controllers
             }
         }
 
-        public ActionResult CalculateCtWithoutSaveData(double rMax, ulong predicted)
+        public ActionResult CurrentResults()
         {
             try
             {
-                var data = _ICalculateCtLogic.CalculateCt(rMax, predicted, Session["userCurrentData"] as IEnumerable<AmplificationData>);
-                Session["CalculatedCtsΔCtsmeanCts"] = data;
+                var data = (CtViewModel) Session["CalculatedCtsΔCtsmeanCts"];
                 return View("CalculateCt", data);
             }
             catch (Exception e)
