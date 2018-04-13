@@ -146,12 +146,21 @@ Or @Html.ActionLink("here", "ReadPreviousState", "Calculate", new { @class = "bt
                 ]
             },
             point: {
-                r: 4,
                 pattern: [
-                    "<polygon points='2.5 0 0 5 5 5'></polygon>",
-                    "<polygon points='2.5 0 0 5 5 5'></polygon>",
+                    "circle",
+                    "circle",
                     "circle"
-                ]
+                ],
+                r: function (point) {
+                    if (point.value === parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")') && point.id === "Ct" && point.x !== 0)
+                    {
+                        return 5;
+                    }
+                    else
+                    {
+                        return 2;
+                    }
+                },
             },
             bindto: '@graphScriptId',
             type: "spline",

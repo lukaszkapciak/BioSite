@@ -1,30 +1,7 @@
-﻿
-@{
-    ViewBag.Title = "Wczytywanie pliku";
+﻿@{
+    ViewBag.Title = "Read Files";
 }
 
-@using (Html.BeginForm("ReadAmplificationData", "ReadFile", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
-    <h4>Amplification Data File</h4>
-    <div class="form-group">
-        <input type="file" id="dataFile" name="postedFile" />
-    </div>
-    <div class="form-group">
-        <input id="responsable" name="type" value="true" type="checkbox" />
-        @Html.Label(" Check if you have a ready file from Step One qpcr")
-        <p style="font-size: 10px;" class="text-danger">*Jeśli posiadasz zwykły plik z danymi np. CSV pozostaw checkbox pusty.
-            Funkcja jest dostosowana do pliku z naglowkiem czyli dane do obliczen musza sie zaczac w 2gim wierszu.
-            Z czasem zostanie to poprawione.</p>
-    </div>
-    <h4>File with miRname</h4>
-    <div class="form-group">
-        <input type="file" id="dataFile" name="postedFileNames" />
-    </div>
-    <div class="form-group">
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Wczytaj" class="btn btn-default" />
-    </div>
-}
+<div class="row">
+    Read file view
+</div>

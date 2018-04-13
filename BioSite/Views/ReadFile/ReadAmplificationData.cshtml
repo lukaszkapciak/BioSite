@@ -13,18 +13,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary()
-        @Html.Label("Number of digits in Ct", new { @class = "control-label"  })
-        @Html.TextBox("digits", 2, new { @class="form-control", type = "number", min = 0, max = 3 } )
         @Html.Label("Minimum value for Rmax", new { @class = "control-label" })
-        @Html.TextBox("rMax", 40000, new { @class = "form-control", type = "number", min = 0 })
+        @Html.TextBox("rMax", 10000, new { @class = "form-control", type = "number", min = 0 })
         @Html.Label("Numbers of predicted points between 2 points", new { @class = "control-label" })
-        @Html.TextBox("predicted", 500000, new { @class = "form-control", type = "number", min = 0 })
-        @*<div class="form-group">
-            <input type="text" name="postedFile" class="form-control"/>
-        </div>
-        <div class="form-group">
-            <input type="text" name="postedFileNames" class="form-control" />
-        </div>*@
+        @Html.TextBox("predicted", 50000, new { @class = "form-control", type = "number", min = 0 })
     }
 
 <button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
@@ -78,27 +70,32 @@
     }
 
 </table>
-}
-else
-{
-    <p class="text-warning"><span class="glyphicon glyphicon-plus"></span> Brak danych</p>
-}
-
-
 <script>
-    ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
+    @if (dataReadMsg != null)
+    {
+        <text>
+            ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
+        </text>
+    }
 
     function CalculateCt() {
         var options = {
-            theme:"sk-circle",
+            theme: "sk-circle",
             message: 'Trwa wyznaczanie linii progowej oraz obliczanie Ct.</br>' +
                 'W przypadku dużej ilości danych czas oczekiwania może się wydłużyć.</br>' +
                 'Po zakończeniu obliczeń nastąpi automatyczne przekierowanie na strone wynikową.',
-            textColor:"white"
+            textColor: "white"
         };
 
         HoldOn.open(options);
         $("#CalculateCtForm").submit();
-        @*window.location.href = '@Url.Action("CalculateCtWithoutSaveData", "Calculate")';*@
     }
 </script>
+}
+else
+{
+    <div class="row">
+        <h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span> Sorry, no data has been uploaded</h3>
+    </div>
+    
+}
