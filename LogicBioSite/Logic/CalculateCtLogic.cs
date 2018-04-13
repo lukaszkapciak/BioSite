@@ -14,7 +14,7 @@ namespace LogicBioSite.Logic
         Tuple<List<string>, List<List<double>>, List<List<double>>> CalculateThreshold(double rMax, IEnumerable<AmplificationData> data);
         IList<Tuple<Double, Double>> PointsPrediction(Tuple<Double, Double> a, Tuple<Double, Double> b, ulong count);
         CtViewModel CalculateCt();
-        CtViewModel CalculateCt(double rMax, double digits, ulong predicted, IEnumerable<AmplificationData> data);
+        CtViewModel CalculateCt(double rMax, ulong predicted, IEnumerable<AmplificationData> data);
         double ReCalculateCt(double lessX, double greaterX, double lessY, double greaterY, double treshold, ulong predicted);
         CtViewModel CalculateΔCtsMeanCts(CtViewModel data, double mean);
         CtViewModel SetMiRnames(CtViewModel data);
@@ -180,7 +180,7 @@ namespace LogicBioSite.Logic
             return new CtViewModel() { Cts = result, Mean = result.Select(p => p.Ct).Average(), StandardDeviation = Math.Sqrt(result.Select(p => p.Ct).Average(v => Math.Pow(v - result.Select(p => p.Ct).Average(), 2))) };
         }
 
-        public CtViewModel CalculateCt(double rMax, double digits, ulong predicted, IEnumerable<AmplificationData> data)
+        public CtViewModel CalculateCt(double rMax, ulong predicted, IEnumerable<AmplificationData> data)
         {
             var result = new List<CalculateCt>();
             var cts = new List<double>();

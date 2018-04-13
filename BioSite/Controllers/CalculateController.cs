@@ -36,11 +36,11 @@ namespace BioSite.Controllers
             }
         }
 
-        public ActionResult CalculateCtWithoutSaveData(double rMax, double digits, ulong predicted)
+        public ActionResult CalculateCtWithoutSaveData(double rMax, ulong predicted)
         {
             try
             {
-                var data = _ICalculateCtLogic.CalculateCt(rMax, digits, predicted, Session["userCurrentData"] as IEnumerable<AmplificationData>);
+                var data = _ICalculateCtLogic.CalculateCt(rMax, predicted, Session["userCurrentData"] as IEnumerable<AmplificationData>);
                 Session["CalculatedCtsΔCtsmeanCts"] = data;
                 return View("CalculateCt", data);
             }
@@ -69,7 +69,7 @@ namespace BioSite.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { message = e });
+                return Json(new { message = e.Message });
             }
         }
 

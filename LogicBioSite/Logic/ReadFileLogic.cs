@@ -25,7 +25,7 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        IList<AmplificationData> AmplificationData(string file);
+        IList<AmplificationData> AmplificationDataCSV(string file, int dataFirstLine);
 
         /// <summary>
         /// Wczytanie danych otrzymanych ze sekwencjonatora
@@ -88,10 +88,10 @@ namespace LogicBioSite.Logic
         /// </summary>
         /// <param name="file">sciezka do pliku pobranego do folderu upload wewnatrz aplikacji</param>
         /// <returns>Zwraca wczytane dane zgodne z modelem AmplificationData</returns>
-        public IList<AmplificationData> AmplificationData(string file)
+        public IList<AmplificationData> AmplificationDataCSV(string file, int dataFirstLine)
         {
             var source = File.ReadLines(file).Select(line => line.Split(';'));
-            IList<AmplificationData> data = source.Skip(1).Select(p => new AmplificationData { Well = p[0], Cycle = p[1], TargetName = p[2], Rn = p[3], ΔRn = p[4] }).ToList();
+            IList<AmplificationData> data = source.Skip(dataFirstLine-1).Select(p => new AmplificationData { Well = p[0], Cycle = p[1], TargetName = p[2], Rn = p[3], ΔRn = p[4] }).ToList();
             
             return data;
         }
@@ -125,7 +125,7 @@ namespace LogicBioSite.Logic
             }
             catch (System.Exception e)
             {
-                return $"Wystapił problem ({e}), dane nie zostały zapisane w bazie";
+                return $"Wystapił problem ({e.Message}), dane nie zostały zapisane w bazie";
             }
         }
 
