@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using LogicBioSite.Models.CalculateCts
+@using LogicBioSite.Models.ReadFile
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -111,19 +113,31 @@
             <div class="navbar-collapse collapse">
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="glyphicon glyphicon-arrow-down"></span> Read Data
+                        New Data <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("StepOne data", "ReadStepOneData", "ReadFile")</li>
-                        <li>@Html.ActionLink("CSV data", "ReadCsvData", "ReadFile")</li>
+                        <li>@Html.ActionLink("Read StepOne data", "ReadStepOneData", "ReadFile")</li>
+                        <li>@Html.ActionLink("Read CSV data", "ReadCsvData", "ReadFile")</li>
+                        <li>@Html.ActionLink("Current Data", "ReadAmplificationData", "ReadFile")</li>
                     </ul>
                 </div>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="glyphicon glyphicon-arrow-down"></span> Calculate
+                        Calculations <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Calculate Ct", "ReadAmplificationData", "ReadFile")</li>
+                        @if ((IEnumerable<AmplificationData>) Session["userCurrentData"] != null)
+                        {
+                            <li>@Html.ActionLink("Calculate", "CalculateCtForm", "Calculate")</li>
+                        }
+                        @if ((CtViewModel)Session["CalculatedCtsΔCtsmeanCts"] != null)
+                        {
+                            <li>@Html.ActionLink("Current results", "CurrentResults", "Calculate")</li>
+                        }
+                        @if ((IEnumerable<AmplificationData>)Session["userCurrentData"] == null && (CtViewModel)Session["CalculatedCtsΔCtsmeanCts"] == null)
+                        {
+                            <li>@Html.ActionLink("No Data for calcualtion", "", "")</li>
+                        }
                     </ul>
                 </div>
             </div>
