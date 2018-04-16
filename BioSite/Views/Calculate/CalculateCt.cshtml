@@ -1,39 +1,183 @@
 ﻿@model LogicBioSite.Models.CalculateCts.CtViewModel
 
 @{
-    ViewBag.Title = "Ct i Threshold dla pierwszych 40 wyników";
+    ViewBag.Title = "Calculated Data";
 }
 
-<h2>Obliczenia</h2>
 
-<p><b>Średnia Ct:</b> @Model.Mean, <b>Odchylenie standardowe:</b> @Model.StandardDeviation</p>
+<p><b>Mean Ct:</b> @Model.Mean, <b>Standard Deviation:</b> @Model.StandardDeviation</p> 
+Click @Html.ActionLink("here", "ReCalculateCtsDeltaCtsmeanCts", "Calculate", new { @class = "btn btn-default btn-sm" }) to recalculate ΔCt and meanCt for whole data and added Ct <br/>
+Or @Html.ActionLink("here", "ReadPreviousState", "Calculate", new { @class = "btn btn-default btn-sm" }) to load the previous state. (it only works for the last <b>one</b> recalculate Ct!)
+<div class="row" style="text-decoration: none; cursor: pointer;">
+    <div class="col-sm-2">@Html.Label("Well")</div>
+    <div class="col-sm-2">@Html.Label("miRname")</div>
+    <div class="col-sm-2">@Html.Label("ThresholdValue")</div>
+    <div class="col-sm-2">@Html.Label("Ct")</div>
+    <div class="col-sm-2">@Html.Label("ΔCt")</div>
+    <div class="col-sm-2">@Html.Label("meanCt")</div> 
+</div>
 
-<table class="table">
-    <tr>
-        <th>
-           @Html.DisplayName("Well")
-        </th>
-        <th>
-            @Html.DisplayName("ThresholdValue")
-        </th>
-        <th>
-            @Html.DisplayName("Ct")
-        </th>
-        <th></th>
-    </tr>
+@foreach (var item in Model.Cts)
+{
+    Guid guid = Guid.NewGuid();
+    string hrefId = "#" + guid.ToString();
+    string divId = guid.ToString();
+    string graphDivId = $"graph{guid.ToString()}";
+    string graphScriptId = $"#graph{guid.ToString()}";
+    string chevronId = $"chevron{guid.ToString()}";
+    string recalculateCtResult = $"recalculateCtResult{guid.ToString()}";
+    <hr style="margin: 5px;" />
+    <div>
+        <a onClick="op('@hrefId');changeChevron('@chevronId');">
+            <div class="row" style="text-decoration: none; cursor: pointer;">
+                <div class="col-sm-2"><span id="@chevronId" class="glyphicon glyphicon-chevron-right"></span> @Html.DisplayFor(modelItem => item.Well)</div>
+                @if (!string.IsNullOrEmpty(item.miRname))
+                {
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.miRname)</div>
+                }
+                else
+                {
+                    <div class="col-sm-2"> - </div>
+                }
+                @if (!item.ThresholdValue.Equals(0))
+                {
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.ThresholdValue)</div>
+                }
+                else
+                {
+                    <div class="col-sm-2"> - </div>
+                }
+                @if (!item.Ct.Equals(0))
+                {
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.Ct)</div>
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.ΔCt)</div>
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.meanCt)</div>
+                }
+                else
+                {
+                    <div class="col-sm-2"> - </div>
+                    <div class="col-sm-2"> - </div>
+                    <div class="col-sm-2"> - </div>
+                }
+            </div>
+        </a>
+    </div>
+    <div id="@divId" style="display: none; padding: 5px; margin-bottom: 5px;">
+        <div class="col-sm-6">
+            <div id="@graphDivId"></div>
+        </div>
+        <div class="col-sm-6">
+            @using (Ajax.BeginForm("RecalculateCt", "Calculate", new AjaxOptions { OnSuccess = "RecalculateCtOnSuccess", OnFailure = "RecalculateCtOnFailure" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                @Html.Hidden("newCtInputId", recalculateCtResult)
+                @Html.Hidden("newCtWell", item.Well)
+                @Html.Hidden("newCtMiRname", item.miRname)
+                var yAxisLessThanM = item.readValues.TakeWhile(p => p < item.ThresholdValue).Any() ? item.readValues.TakeWhile(p => p < item.ThresholdValue).Last() : 0;
+                var xAxisLessThanM = yAxisLessThanM > 0 ? item.readValues.ToList().IndexOf(yAxisLessThanM) + 1 : 0;
+                var yAxisGreaterThanM = item.readValues.SkipWhile(p => p <= item.ThresholdValue).Any() ? item.readValues.SkipWhile(p => p <= item.ThresholdValue).First() : 0;
+                var xAxisGreaterThanM = yAxisGreaterThanM > 0 ? item.readValues.ToList().IndexOf(yAxisGreaterThanM) + 1 : 0;
+                <div class="form-group col-sm-6">
+                    @Html.Label("Lower point AxisX", new { @class = "control-label" })
+                    @Html.TextBox("lessX", xAxisLessThanM.ToString(), new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-6">
+                    @Html.Label("Biger point AxisX", new { @class = "control-label" })
+                    @Html.TextBox("greaterX", xAxisGreaterThanM.ToString(), new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-6">
+                    @Html.Label("Lower point AxisY", new { @class = "control-label" })
+                    @Html.TextBox("lessY", yAxisLessThanM.ToString(), new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-6">
+                    @Html.Label("Biger point AxisY", new { @class = "control-label" })
+                    @Html.TextBox("greaterY", yAxisGreaterThanM.ToString(), new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-4">
+                    @Html.Label("Treshold", new { @class = "control-label" })
+                    @Html.TextBox("treshold", item.ThresholdValue.ToString(), new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm-5">
+                    @Html.Label("Predicted points number", new { @class = "control-label" })
+                    @Html.TextBox("predicted", 500000, new {@class = "form-control", type = "number", min = 0 })
+                </div>
+                <div class="form-group col-sm-3" style="padding-top: 25px;">
+                    <input type="submit" value="Recalculate" class="btn btn-primary" style="width: 100%"/>
+                </div>
+                <div class="form-group">
+                    @Html.Label("New Ct", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBox(recalculateCtResult, null, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                </div>
+            }
+        </div>
+        <a onclick="op('@hrefId');changeChevron('@chevronId');" class="btn btn-default" role="button" style="cursor: pointer; width: 100%;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+    </div>
+    <script>
+        // Create plot
+        var qpcrAxisX = ["qpcrAxisX"];
+        for (var i = 0; i < 40; i++) {
+            qpcrAxisX.push(i + 1);
+        }
+        var qpcr = ["qpcr"];
+        @foreach (var s in item.readValues)
+        {
+            @:qpcr.push(parseFloat('@s.ToString().Replace(",", ".")'));
+        }
 
-@foreach (var item in Model.Cts) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Well)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ThresholdValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ct)
-        </td>
-    </tr>
+        var chart = bb.generate({
+            size: {
+                width: 450
+            },
+            data: {
+                xs: {
+                    qpcr: "qpcrAxisX",
+                    tresholdValue: "tresholdAxisX",
+                    Ct: "CtAxisX"
+                },
+                columns: [
+                    qpcrAxisX,
+                    ["tresholdAxisX", 1, 40],
+                    ["CtAxisX", parseFloat('@item.Ct.ToString().Replace(",", ".")')],
+                    qpcr,
+                    ["tresholdValue", parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")'), parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")')],
+                    ["Ct", parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")')]
+                ]
+            },
+            point: {
+                pattern: [
+                    "circle",
+                    "circle",
+                    "circle"
+                ],
+                r: function (point) {
+                    if (point.value === parseFloat('@item.ThresholdValue.ToString().Replace(",", ".")') && point.id === "Ct" && point.x !== 0)
+                    {
+                        return 5;
+                    }
+                    else
+                    {
+                        return 2;
+                    }
+                },
+            },
+            bindto: '@graphScriptId',
+            type: "spline",
+            zoom: {
+                enabled: true
+            }
+        });
+
+        function RecalculateCtOnSuccess(response) {
+            var recalculateCtResult = "#" + response.newCtInputId;
+            $(recalculateCtResult).val(response.ctValue);
+            ShowNotification("success", "A new Ct for " + response.newCtWell + " / " + response.newCtMiRname + " was calculated");
+        }
+        function RecalculateCtOnFailure(response) {
+            ShowNotification("error", response.message);
+        }
+    </script>
 }
 
-</table>

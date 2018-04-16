@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using LogicBioSite.Models.CalculateCts
+@using LogicBioSite.Models.ReadFile
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
@@ -11,8 +13,30 @@
     <script src="@Url.Content("~/Content/HoldOn.min.js")"></script>
     <link href="@Url.Content("~/Content/toastr.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Content/toastr.js")"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link href="@Url.Content("~/Content/billboard.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Content/billboard.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")"></script>
 
     <script>
+        jQuery(document).ready(function ($) {
+            /* slideToggleDiv */
+            op = function (obj) {
+                $(obj).stop().slideToggle();
+            };
+
+            changeChevron = function (arg) {
+                var span = $("#" + arg);
+                if (span.hasClass("glyphicon glyphicon-chevron-right")) {
+                    span.removeClass("glyphicon glyphicon-chevron-right");
+                    span.addClass("glyphicon glyphicon-chevron-down");
+                } else {
+                    span.removeClass("glyphicon glyphicon-chevron-down");
+                    span.addClass("glyphicon glyphicon-chevron-right");
+                }
+            };
+        });
+
         /**
         * Wyświetl informację w formie js notification
         *
@@ -40,18 +64,18 @@
             }
 
             switch (type) {
-                case "success":
-                    window.toastr.success(message);
-                    break;
-                case "warning":
-                    window.toastr.warning(message);
-                    break;
-                case "error":
-                    window.toastr.error(message);
-                    break;
-                default:
-                    window.toastr.info(message);
-                    break;
+            case "success":
+                window.toastr.success(message);
+                break;
+            case "warning":
+                window.toastr.warning(message);
+                break;
+            case "error":
+                window.toastr.error(message);
+                break;
+            default:
+                window.toastr.info(message);
+                break;
             }
         }
     </script>
@@ -77,11 +101,54 @@
             </div>
         </div>
     </div>
+    <div class="navbar navbar-light" style="background-color: #e3f2fd; padding-top: 7.5px;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        New Data <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Read StepOne data", "ReadStepOneData", "ReadFile")</li>
+                        <li>@Html.ActionLink("Read CSV data", "ReadCsvData", "ReadFile")</li>
+                        <li>@Html.ActionLink("Current Data", "ReadAmplificationData", "ReadFile")</li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Calculations <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @if ((IEnumerable<AmplificationData>) Session["userCurrentData"] != null)
+                        {
+                            <li>@Html.ActionLink("Calculate", "CalculateCtForm", "Calculate")</li>
+                        }
+                        @if ((CtViewModel)Session["CalculatedCtsΔCtsmeanCts"] != null)
+                        {
+                            <li>@Html.ActionLink("Current results", "CurrentResults", "Calculate")</li>
+                        }
+                        @if ((IEnumerable<AmplificationData>)Session["userCurrentData"] == null && (CtViewModel)Session["CalculatedCtsΔCtsmeanCts"] == null)
+                        {
+                            <li>@Html.ActionLink("No Data for calculation", "", null, new { @onclick = "javascript:return false;" })</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - BioSite</p>
+            <p>Łukasz Kapciak</p>
         </footer>
     </div>
 

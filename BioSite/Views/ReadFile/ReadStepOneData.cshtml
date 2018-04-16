@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Read StepOne File";
+}
+
+@using (Html.BeginForm("ReadStepOneAmplificationData", "ReadFile", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    <h4>Amplification Data StepOne File</h4>
+    <div class="form-group">
+        <label for="dataFile" class="btn btn-default">
+            <i class="glyphicon glyphicon-file"></i> Choice Data File
+        </label>
+        <input type="file" onchange="choiceDataFile(this)" id="dataFile" name="postedFile" style="display: none;" />
+        <span id="dataFileInfo"></span>
+    </div>
+    <h4>File with miRname (optional)</h4>
+    <div class="form-group">
+        <label for="namesFile" class="btn btn-default">
+            <i class="glyphicon glyphicon-file"></i> Choice Names File
+        </label>
+        <input type="file" onchange="choiceNamesFile(this)" id="namesFile" name="postedFileNames" style="display: none;" />
+        <span id="namesFileInfo"></span>  
+    </div>
+    <div class="form-group">
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Load" class="btn btn-info" />
+    </div>
+}
+
+<script>
+    function choiceDataFile(e) {
+        var name = e.value.split("\\");
+        $("#dataFileInfo").text(name[name.length - 1]);
+    }
+
+    function choiceNamesFile(e) {
+        var name = e.value.split("\\");
+        $("#namesFileInfo").text(name[name.length - 1]);
+    }
+</script>

@@ -13,7 +13,7 @@ namespace LogicBioSite.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201802171133429_initial"; }
+            get { return "201803221843527_initial"; }
         }
         
         string IMigrationMetadata.Source

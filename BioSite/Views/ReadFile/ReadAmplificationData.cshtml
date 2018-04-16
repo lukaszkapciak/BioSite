@@ -1,78 +1,79 @@
-﻿@model IEnumerable<LogicBioSite.Models.ReadFile.AmplificationData>
+﻿@model PagedList.IPagedList<LogicBioSite.Models.ReadFile.AmplificationData>
+@using PagedList.Mvc
 
 @{
     ViewBag.Title = "ShowAmplificationData";
     var dataReadMsg = ViewData["dataReadMsg"] as string[];
 }
 
-@if (Model != null && Model.Count() > 0)
+@if (Model != null && Model.Any())
 {
-<h4>Oblicz Ct, threshold, średnią oraz odchylenie dla ΔRn</h4>
-<button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
+<h2>Amplification Data</h2>
 
-<h2>Amplification Data:</h2>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Well)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Cycle)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TargetName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ΔRn)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model) {
+<table class="table table-striped">
+    <thead style="background-color: black; color: white; border-radius: 5px;">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Well)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cycle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TargetName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ΔRn)
-            </td>
+            <th>
+                @Html.DisplayName("Well")
+            </th>
+            <th>
+                @Html.DisplayName("miRname")
+            </th>
+            <th>
+                @Html.DisplayName("Cycle")
+            </th>
+            <th>
+                @Html.DisplayName("Target")
+            </th>
+            <th>
+                @Html.DisplayName("Rn")
+            </th>
+            <th>
+                @Html.DisplayName("ΔRn")
+            </th>
         </tr>
-    }
-
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Well)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.miRname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cycle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ΔRn)
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+<label>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount</label>
+@(Html.PagedListPager(Model, page => Url.Action("ReadAmplificationData", "ReadFile", new { page })))
+<script>
+    @if (dataReadMsg != null)
+    {
+        <text>
+            ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
+        </text>
+    }
+</script>
 }
 else
 {
-    <p class="text-warning"><span class="glyphicon glyphicon-plus"></span> Brak danych</p>
+    <div class="row">
+        <h3 class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span> Sorry, no data has been uploaded</h3>
+    </div>
+    
 }
-
-
-<script>
-    ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
-
-    function CalculateCt() {
-        var options = {
-            theme:"sk-circle",
-            message: 'Trwa wyznaczanie linii progowej oraz obliczanie Ct.</br>' +
-                'W przypadku dużej ilości danych czas oczekiwania może się wydłużyć.</br>' +
-                'Po zakończeniu obliczeń nastąpi automatyczne przekierowanie na strone wynikową.',
-            textColor:"white"
-        };
-
-        HoldOn.open(options);
-        window.location.href = '@Url.Action("CalculateCtWithoutSaveData", "Calculate")';
-    }
-</script>
