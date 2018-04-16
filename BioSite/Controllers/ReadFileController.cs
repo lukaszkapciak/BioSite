@@ -5,6 +5,7 @@ using LogicBioSite.Logic;
 using LogicBioSite.Models.DbContext;
 using System.Collections.Generic;
 using LogicBioSite.Models.ReadFile;
+using PagedList;
 
 namespace BioSite.Controllers
 {
@@ -23,25 +24,44 @@ namespace BioSite.Controllers
         #endregion
 
         #region Read Files
+        /// <summary>
+        /// Default View
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// CSV form
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ReadCsvData()
         {
             return View();
         }
 
+        /// <summary>
+        /// StepOne form
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ReadStepOneData()
         {
             return View();
         }
 
-        public ActionResult ReadAmplificationData()
+        /// <summary>
+        /// Metoda zasilajaca widok wczytanymi danymi
+        /// </summary>
+        /// <param name="page">page number</param>
+        /// <returns>Zwraca dane typu PagedList</returns>
+        public ActionResult ReadAmplificationData(int? page)
         {
+            var pageNumber = page ?? 1;
+            var pageSize = 40;
             var data = (IList<AmplificationData>)Session["userCurrentData"] != null ? (IList<AmplificationData>)Session["userCurrentData"] : new List<AmplificationData>();
-            return View(data);
+            return View(data.ToPagedList(pageNumber, pageSize));
         }
 
         /// <summary>
@@ -68,7 +88,7 @@ namespace BioSite.Controllers
 
                 Session["userCurrentData"] = data;
 
-                return View("ReadAmplificationData", data);
+                return View("ReadAmplificationData", data.ToPagedList(1, 40));
             }
             catch (Exception)
             {
@@ -100,7 +120,7 @@ namespace BioSite.Controllers
 
                 Session["userCurrentData"] = data;
 
-                return View("ReadAmplificationData", data);
+                return View("ReadAmplificationData", data.ToPagedList(1, 40));
             }
             catch (Exception)
             {

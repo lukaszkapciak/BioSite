@@ -1,4 +1,5 @@
-﻿@model IEnumerable<LogicBioSite.Models.ReadFile.AmplificationData>
+﻿@model PagedList.IPagedList<LogicBioSite.Models.ReadFile.AmplificationData>
+@using PagedList.Mvc
 
 @{
     ViewBag.Title = "ShowAmplificationData";
@@ -7,55 +8,59 @@
 
 @if (Model != null && Model.Any())
 {
-<h2>Amplification Data:</h2>
+<h2>Amplification Data</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Well)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.miRname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Cycle)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TargetName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ΔRn)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model) {
+<table class="table table-striped">
+    <thead style="background-color: black; color: white; border-radius: 5px;">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Well)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.miRname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cycle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TargetName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ΔRn)
-            </td>
+            <th>
+                @Html.DisplayName("Well")
+            </th>
+            <th>
+                @Html.DisplayName("miRname")
+            </th>
+            <th>
+                @Html.DisplayName("Cycle")
+            </th>
+            <th>
+                @Html.DisplayName("Target")
+            </th>
+            <th>
+                @Html.DisplayName("Rn")
+            </th>
+            <th>
+                @Html.DisplayName("ΔRn")
+            </th>
         </tr>
-    }
-
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Well)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.miRname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cycle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ΔRn)
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+<label>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount</label>
+@(Html.PagedListPager(Model, page => Url.Action("ReadAmplificationData", "ReadFile", new { page })))
 <script>
     @if (dataReadMsg != null)
     {
