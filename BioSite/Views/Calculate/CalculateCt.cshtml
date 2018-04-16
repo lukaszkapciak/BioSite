@@ -26,7 +26,7 @@ Or @Html.ActionLink("here", "ReadPreviousState", "Calculate", new { @class = "bt
     string graphScriptId = $"#graph{guid.ToString()}";
     string chevronId = $"chevron{guid.ToString()}";
     string recalculateCtResult = $"recalculateCtResult{guid.ToString()}";
-    <hr style="margin: 0;" />
+    <hr style="margin: 5px;" />
     <div>
         <a onClick="op('@hrefId');changeChevron('@chevronId');">
             <div class="row" style="text-decoration: none; cursor: pointer;">

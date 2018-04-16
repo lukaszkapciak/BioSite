@@ -21,25 +21,21 @@ namespace BioSite.Controllers
         }
         #endregion
 
-        //public ActionResult CalculateCt()
-        //{
-        //    try
-        //    {
-        //        var data = _ICalculateCtLogic.CalculateCt();
-
-        //        return View(data);
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        throw;
-        //    }
-        //}
+        /// <summary>
+        /// Widok formularza dla obliczen Ct
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CalculateCtForm()
         {
             return View();
         }
 
+        /// <summary>
+        /// Metoda obliczajaca wartosci Ct
+        /// </summary>
+        /// <param name="rMax">wartosc od ktorej musi byc wieksza maksymalna wartosc pomiaru w dolku aby zostaly dla niej wykonane obliczenia</param>
+        /// <param name="predicted">ilosc punktow przewidywanych miedzy punktem mniejszym i wiekszym od wartosci Th na wykresie</param>
+        /// <returns>Zwraca obliczone dane</returns>
         public ActionResult CalculateCt(double rMax, ulong predicted)
         {
             try
@@ -55,6 +51,10 @@ namespace BioSite.Controllers
             }
         }
 
+        /// <summary>
+        /// Aktualnie obliczone dane
+        /// </summary>
+        /// <returns>Zwraca dane ktore zostaly wczesniej przeliczone</returns>
         public ActionResult CurrentResults()
         {
             try
@@ -69,6 +69,19 @@ namespace BioSite.Controllers
             }
         }
 
+        /// <summary>
+        /// Metoda przeliczajaca Ct dla wybranego dolka na nowo. Dodatkowo zachowuje poprzedni stan danych przed przeliczeniem.
+        /// </summary>
+        /// <param name="newCtWell">nr plytki</param>
+        /// <param name="newCtMiRname">nazwa</param>
+        /// <param name="newCtInputId">id inputa do ktorego przekazywana jest przeliczona wartosc</param>
+        /// <param name="lessX">mniejsza wartosc z osi X</param>
+        /// <param name="greaterX">wieksza wartosc z osi X</param>
+        /// <param name="lessY">mniejsza wartosc z osi Y</param>
+        /// <param name="greaterY">wieksza wartosc z osi Y</param>
+        /// <param name="treshold">wartosc linii progowej</param>
+        /// <param name="predicted">ilosc liczb ktora zostanie przewidziana pomiedzy 2ma punktami</param>
+        /// <returns>Zwraca nowo przeliczona wartosc Ct</returns>
         [HttpPost]
         public JsonResult RecalculateCt(string newCtWell, string newCtMiRname, string newCtInputId, double lessX, double greaterX, double lessY, double greaterY, double treshold, ulong predicted)
         {
@@ -91,6 +104,10 @@ namespace BioSite.Controllers
             }
         }
 
+        /// <summary>
+        /// Metoda przeliczajaca na nowo wartosci Ct oraz deltaCt dla calych danych
+        /// </summary>
+        /// <returns>Zwraca przeliczone wartosci dla calych danych</returns>
         public ActionResult ReCalculateCtsDeltaCtsmeanCts()
         {
             var data = Session["CalculatedCtsΔCtsmeanCts"] as CtViewModel;
@@ -99,12 +116,7 @@ namespace BioSite.Controllers
             {
                 var meanCts = data.Cts.Where(p => p.Ct > 0).Select(p => p.Ct).Average();
                 var stnDev = Math.Sqrt(data.Cts.Where(p => p.Ct > 0).Select(p => p.Ct).Average(v => Math.Pow(v - data.Cts.Where(p => p.Ct > 0).Select(p => p.Ct).Average(), 2)));
-                foreach (var item in data.Cts.Where(p => p.Ct > 0))
-                {
-                    item.ΔCt = item.Ct - meanCts;
-                    item.meanCt = Math.Pow(2, -item.ΔCt);
-                }
-
+                data = _ICalculateCtLogic.CalculateΔCtsMeanCts(data, meanCts);
                 data.Mean = meanCts;
                 data.StandardDeviation = stnDev;
             }
@@ -114,6 +126,10 @@ namespace BioSite.Controllers
             return View("CalculateCt", data);
         }
 
+        /// <summary>
+        /// Metoda wczytujaca stan przed przeliczeniem
+        /// </summary>
+        /// <returns>Zwraca dane w stanie przed przelcizeniem na nowo wartosci Ct</returns>
         public ActionResult ReadPreviousState()
         {
             var data = Session["CalculatedCtsΔCtsmeanCtsPreviousState"] as CtViewModel;
