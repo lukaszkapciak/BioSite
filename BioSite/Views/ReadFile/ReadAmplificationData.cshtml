@@ -8,10 +8,20 @@
 
 @if (Model != null && Model.Any())
 {
-<h2>Amplification Data</h2>
+<div class="row">
+    <div class="col-sm-10">
+        <p style="font-size: 28px;">Amplification Data</p>
+    </div>
+    <div class="col-sm-2 form-group" align="right">
+        <input type="text" pattern="\d{2}" maxlength='@Model.PageCount.ToString().Count()' id="pageNumberInput" value="@Model.PageNumber" class="form-control pageNumberInputStyle" onblur="goToPage(this.value);" />
 
-<table class="table table-striped">
-    <thead style="background-color: black; color: white; border-radius: 5px;">
+        <p style="display:inline; font-size: 22px; margin-right: 5px;">/ @Model.PageCount</p>
+
+        <p onclick='$("#pageNumberInput").val(parseInt($("#pageNumberInput").val()) + 1); goToPage($("#pageNumberInput").val());' class="changePageNumberArrows"><span class="glyphicon glyphicon-forward"></span></p>
+    </div>
+</div>
+<table class="table table-striped" style="width: 100%;">
+    <thead style="background-color: #428bca; color: white;">
         <tr>
             <th>
                 @Html.DisplayName("Well")
@@ -37,36 +47,54 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td style="width: 15%;">
                     @Html.DisplayFor(modelItem => item.Well)
                 </td>
-                <td>
+                <td style="width: 20%;">
                     @Html.DisplayFor(modelItem => item.miRname)
                 </td>
-                <td>
+                <td style="width: 15%;">
                     @Html.DisplayFor(modelItem => item.Cycle)
                 </td>
-                <td>
+                <td style="width: 15%;">
                     @Html.DisplayFor(modelItem => item.TargetName)
                 </td>
-                <td>
+                <td style="width: 20%;">
                     @Html.DisplayFor(modelItem => item.Rn)
                 </td>
-                <td>
+                <td style="width: 15%;">
                     @Html.DisplayFor(modelItem => item.ΔRn)
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<label>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount</label>
-@(Html.PagedListPager(Model, page => Url.Action("ReadAmplificationData", "ReadFile", new { page })))
+
+    <div class="row">
+        <div class="col-sm-6">
+            <label>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount</label>
+        </div>
+        <div class="col-sm-6" style="margin-top: -25px;" align="right">
+            @(Html.PagedListPager(Model, page => Url.Action("ReadAmplificationData", "ReadFile", new { page }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 5, DisplayPageCountAndCurrentLocation = true }))
+        </div>
+    </div>
+
 <script>
     @if (dataReadMsg != null)
     {
         <text>
             ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
         </text>
+    }
+
+    function goToPage(number) {
+        if ('@Model.PageCount' < parseInt(number))
+        {
+            number = '@Model.PageCount';
+        }
+        var link = '@Url.Action("ReadAmplificationData", "ReadFile", new { page = "number" })';
+        link = link.replace("number", number);
+        window.location.href = link;
     }
 </script>
 }
@@ -77,3 +105,24 @@ else
     </div>
     
 }
+
+<style>
+    .pageNumberInputStyle {
+        text-align: center; 
+        margin-top: -5px; 
+        width: 30%; 
+        display:inline;
+    }
+
+    .changePageNumberArrows {
+        cursor:pointer; 
+        color: #dbdbdb; 
+        font-size: 18px; 
+        display:inline; 
+        margin-right: 5px;
+    }
+
+    .changePageNumberArrows:hover {
+        color: #3276b1;
+    }
+</style>
