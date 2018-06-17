@@ -5,16 +5,23 @@
 }
 
 
-<p><b>Mean Ct:</b> @Model.Mean, <b>Standard Deviation:</b> @Model.StandardDeviation</p> 
-Click @Html.ActionLink("here", "ReCalculateCtsDeltaCtsmeanCts", "Calculate", new { @class = "btn btn-default btn-sm" }) to recalculate ΔCt and meanCt for whole data and added Ct <br/>
-Or @Html.ActionLink("here", "ReadPreviousState", "Calculate", new { @class = "btn btn-default btn-sm" }) to load the previous state. (it only works for the last <b>one</b> recalculate Ct!)
+<div class="row" style="margin-bottom: 10px;">
+    <div class="col-sm-6">
+        @Html.ActionLink("Export to CSV", "DownloadReport", "ReadFile", null, new {@class = "btn btn-default btn-sm", title = "Click the button to save data as .csv file with '/' as separator"})
+        @Html.ActionLink("Recalculate data", "ReCalculateCtsDeltaCtsmeanCts", "Calculate", new {@class = "btn btn-default btn-sm", title = "Click the button to recalculate ΔΔCt oraz R for whole data and added Ct"})
+        @Html.ActionLink("Previous state", "ReadPreviousState", "Calculate", new {@class = "btn btn-default btn-sm", title = "Click the button to load the previous state. (it only works for the last one recalculate Ct!)"})
+    </div>
+    <div class="col-sm-6" style="text-align: right; padding-top: 7px;">
+        <p><b>Mean Ct:</b> @Model.Mean <b>Standard Deviation:</b> @Model.StandardDeviation</p>
+    </div>
+</div>
 <div class="row" style="text-decoration: none; cursor: pointer;">
     <div class="col-sm-2">@Html.Label("Well")</div>
     <div class="col-sm-2">@Html.Label("miRname")</div>
     <div class="col-sm-2">@Html.Label("ThresholdValue")</div>
     <div class="col-sm-2">@Html.Label("Ct")</div>
-    <div class="col-sm-2">@Html.Label("ΔCt")</div>
-    <div class="col-sm-2">@Html.Label("meanCt")</div> 
+    <div class="col-sm-2">@Html.Label("ΔΔCt")</div>
+    <div class="col-sm-2">@Html.Label("R")</div> 
 </div>
 
 @foreach (var item in Model.Cts)
@@ -50,8 +57,8 @@ Or @Html.ActionLink("here", "ReadPreviousState", "Calculate", new { @class = "bt
                 @if (!item.Ct.Equals(0))
                 {
                     <div class="col-sm-2">@Html.DisplayFor(modelItem => item.Ct)</div>
-                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.ΔCt)</div>
-                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.meanCt)</div>
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.ΔΔCt)</div>
+                    <div class="col-sm-2">@Html.DisplayFor(modelItem => item.R)</div>
                 }
                 else
                 {

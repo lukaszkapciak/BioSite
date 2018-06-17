@@ -80,13 +80,6 @@
     </div>
 
 <script>
-    @if (dataReadMsg != null)
-    {
-        <text>
-            ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
-        </text>
-    }
-
     function goToPage(number) {
         if ('@Model.PageCount' < parseInt(number))
         {
@@ -105,20 +98,27 @@ else
     </div>
     
 }
-
+<script>
+    @if (dataReadMsg != null)
+    {
+        <text>
+            ShowNotification('@dataReadMsg[0]', '@dataReadMsg[1]');
+        </text>
+    }
+</script>
 <style>
     .pageNumberInputStyle {
-        text-align: center; 
-        margin-top: -5px; 
-        width: 30%; 
+        text-align: center;
+        margin-top: -5px;
+        width: 30%;
         display:inline;
     }
 
     .changePageNumberArrows {
-        cursor:pointer; 
-        color: #dbdbdb; 
-        font-size: 18px; 
-        display:inline; 
+        cursor:pointer;
+        color: #dbdbdb;
+        font-size: 18px;
+        display:inline;
         margin-right: 5px;
     }
 
