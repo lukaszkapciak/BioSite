@@ -88,7 +88,7 @@ namespace BioSite.Controllers
             try
             {
                 var oldData = Session["CalculatedCtsΔCtsmeanCts"] as CtViewModel;
-                var oldCts = oldData?.Cts.Select(item => new CalculateCt() {Ct = item.Ct, readValues = item.readValues, ThresholdValue = item.ThresholdValue, Well = item.Well, meanCt = item.meanCt, ΔCt = item.ΔCt, id = item.id, miRname = item.miRname}).ToList();
+                var oldCts = oldData?.Cts.Select(item => new CalculateCt() {Ct = item.Ct, readValues = item.readValues, ThresholdValue = item.ThresholdValue, Well = item.Well, R = item.R, ΔΔCt = item.ΔΔCt, id = item.id, miRname = item.miRname}).ToList();
                 var previousState = new CtViewModel { Cts = oldCts, Mean = oldData.Mean, StandardDeviation = oldData.StandardDeviation };
                 Session["CalculatedCtsΔCtsmeanCtsPreviousState"] = previousState;
                 var ctValue = _ICalculateCtLogic.ReCalculateCt(lessX, greaterX, lessY, greaterY, treshold, predicted);

@@ -282,8 +282,8 @@ namespace LogicBioSite.Logic
         {
             foreach (var item in data.Cts.Where(p => p.Ct > 0))
             {
-                item.ΔCt = item.Ct - mean;
-                item.meanCt = Math.Pow(2, -item.ΔCt);
+                item.ΔΔCt = item.Ct - mean;
+                item.R = Math.Pow(2, -item.ΔΔCt);
             }
 
             return data;

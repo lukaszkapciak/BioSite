@@ -6,6 +6,8 @@ using LogicBioSite.Models.DbContext;
 using System.Collections.Generic;
 using LogicBioSite.Models.ReadFile;
 using PagedList;
+using LogicBioSite.Models.CalculateCts;
+using System.Text;
 
 namespace BioSite.Controllers
 {
@@ -128,6 +130,30 @@ namespace BioSite.Controllers
                 return View("ReadAmplificationData");
             }
         }
+        #endregion
+
+        #region Save File
+
+        /// <summary>
+        /// Metoda zapisująca dane do pliku CSV
+        /// </summary>
+        /// <returns>Zwraca plik CSV</returns>
+        public FileResult DownloadReport()
+        {
+            var data = Session["CalculatedCtsΔCtsmeanCts"] as CtViewModel;
+            var cts = data?.Cts;
+            var sb = new StringBuilder();
+            sb.AppendLine("Mean Ct" + "/" + "Standard Deviation");
+            sb.AppendLine(data?.Mean + "/" + data?.StandardDeviation);
+            sb.AppendLine();
+            sb.AppendLine("Well" + "/" + "miRname" + "/" + "ThresholdValue" + "/" + "Ct" + "/" + "DeltaDeltaCt" + "/" + "R");
+            foreach (var item in cts)
+            {
+                sb.AppendLine(item.Well + "/" + item.miRname + "/" + item.ThresholdValue + "/" + item.Ct + "/" + item.ΔΔCt + "/" + item.R);
+            }
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", $"report - {DateTime.Now.ToShortDateString()}.csv");
+        }
+
         #endregion
     }
 }

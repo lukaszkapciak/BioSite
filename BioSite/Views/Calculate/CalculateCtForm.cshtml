@@ -3,7 +3,7 @@
     ViewBag.Title = "Calculate Ct";
 }
 
-<h4>Calculate Ct, threshold, mean and std dev for ΔRn</h4>
+<h4>Calculate Threshold, Ct, ΔΔCt and R values.</h4>
 
 @using (Html.BeginForm("CalculateCt", "Calculate", null, FormMethod.Post, new { id = "CalculateCtForm" }))
 {
@@ -14,15 +14,15 @@
     @Html.Label("Numbers of predicted points between 2 points", new { @class = "control-label" })
     @Html.TextBox("predicted", 50000, new { @class = "form-control", type = "number", min = 0 })
 }
-
-<button class="btn btn-default btn-lg" onclick="CalculateCt();"><span class="glyphicon glyphicon-plus"></span> Calculate</button>
+<br />
+<button class="btn btn-default btn-sm" onclick="CalculateCt();"><span class="glyphicon glyphicon-tasks"></span> Calculate</button>
 
 <script>
     function CalculateCt() {
         var options = {
             theme: "sk-circle",
-            message: 'The threshold line is being determined and the Ct is calculated. </ br> ' +
-                'In the case of a large amount of data, the waiting time may be longer. </ br>' +
+            message: 'The threshold line is being determined and the Ct is calculated. <br> ' +
+                'In the case of a large amount of data, the waiting time may be longer. <br>' +
                 'After completing the calculations, an automatic redirection will take place on the result page.',
             textColor: "white"
         };
