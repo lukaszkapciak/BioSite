@@ -70,14 +70,14 @@
     </tbody>
 </table>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <label>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount</label>
-        </div>
-        <div class="col-sm-6" style="margin-top: -25px;" align="right">
-            @(Html.PagedListPager(Model, page => Url.Action("ReadAmplificationData", "ReadFile", new { page }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 5, DisplayPageCountAndCurrentLocation = true }))
-        </div>
+<div class="row">
+    <div class="col-sm-6">
+        <label>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount</label>
     </div>
+    <div class="col-sm-6" style="margin-top: -25px;" align="right">
+        @(Html.PagedListPager(Model, page => Url.Action("ReadAmplificationData", "ReadFile", new { page }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 5, DisplayPageCountAndCurrentLocation = true }))
+    </div>
+</div>
 
 <script>
     function goToPage(number) {
@@ -107,12 +107,15 @@ else
     }
 </script>
 <style>
-    .pageNumberInputStyle {
-        text-align: center;
-        margin-top: -5px;
-        width: 30%;
-        display:inline;
-    }
+    .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+        z-index: 0;
+        }
+     .pageNumberInputStyle {
+         text-align: center;
+         margin-top: -5px;
+         width: 30%;
+         display:inline;
+     }
 
     .changePageNumberArrows {
         cursor:pointer;
