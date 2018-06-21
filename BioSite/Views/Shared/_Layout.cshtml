@@ -94,10 +94,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
-                @Html.Partial("_LoginPartial")
+                @*@Html.Partial("_LoginPartial")*@
             </div>
         </div>
     </div>
@@ -144,9 +144,10 @@
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer class="footer navbar-fixed-bottom" style="background-color: #e3f2fd; color: #428bca; font-size: 14px; padding-top: 10px; z-index: 2">
+        <div style="margin-bottom: 50px; ">
+            @RenderBody()
+        </div>
+        <footer class="navbar-fixed-bottom" style="background-color: #e3f2fd; color: #428bca; font-size: 14px; padding-top: 10px;">
             <div class="container">
                 <p><b>&copy; @DateTime.Now.Year - BioSite</b></p>
                 <p><b>Łukasz Kapciak</b></p>
