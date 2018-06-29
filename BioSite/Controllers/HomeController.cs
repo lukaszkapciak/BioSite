@@ -1,9 +1,4 @@
-﻿using LogicBioSite.Models.ReadFile;
-using LogicBioSite.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.IO;
 using System.Web.Mvc;
 
 namespace BioSite.Controllers
@@ -17,15 +12,21 @@ namespace BioSite.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
+        }
+
+        /// <summary>
+        /// Metoda zwracajaca przykładowe dane dla użytkownika do pierwszej analizy
+        /// </summary>
+        /// <returns>Zwraca dane w formacie CSV</returns>
+        public FileResult ExampleData()
+        {
+            string file = Server.MapPath("~/Content/Help/data/exampleData.csv");
+            return File(file, Path.GetFileName(file));
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }
