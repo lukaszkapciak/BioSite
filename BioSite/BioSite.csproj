@@ -260,6 +260,12 @@
     <Content Include="Content\billboard.min.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Help\img\helpImg1.png" />
+    <Content Include="Content\Help\img\helpImg2.png" />
+    <Content Include="Content\Help\img\helpImg3.png" />
+    <Content Include="Content\Help\img\helpImg4.png" />
+    <Content Include="Content\Help\img\helpImg5.png" />
+    <Content Include="Content\Help\img\helpImg6.png" />
     <Content Include="Content\HoldOn.css" />
     <Content Include="Content\HoldOn.js" />
     <Content Include="Content\HoldOn.min.css" />
@@ -281,6 +287,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\lukaszkapciak.hostingasp.pl - Web Deploy.pubxml" />
+    <Content Include="Content\Help\data\exampleData.csv" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
